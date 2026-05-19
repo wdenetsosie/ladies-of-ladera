@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String       @id @default(cuid())
+  name      String
+  email     String       @unique
+  createdAt DateTime     @default(now())
+  bookings  Booking[]
+  rsvps     SocialRSVP[]
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String // "PRIVATE" or "GROUP"
+  date      DateTime
+  createdAt DateTime @default(now())
+}
+
+model SocialRSVP {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  eventId   String
+  createdAt DateTime @default(now())
+}
